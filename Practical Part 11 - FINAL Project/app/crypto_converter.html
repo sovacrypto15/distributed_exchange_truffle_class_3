@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FRCN - Firecoin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="./app.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Quicksand" rel="stylesheet"> <!-- Includes Quicksand Font -->    
+    <link rel="stylesheet" href="./app/stylesheets/converter.css">
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     
+<!-- currency converter script 
+  ===================================================== -->
+         
+		  
+		  <script>
+            var currency = {'From': 'Bitcoin', 'To': 'US Dollar'};
+            
+            $(document).ready(function () {
+                updateExchange('UPDATE_EXCHANGE', 'To');
+                //This section manages the sliders
+                $(".select").click(function () {
+                    var id = $(this).next().attr('id');
+                    var otherId = (id == 'fromList') ? 'toList' : 'fromList';
+                    if($("#"+otherId).hasClass('opened')) {
+                        $("#"+otherId).removeClass('opened');
+                        $("#"+otherId).slideToggle(300, function () {
+                            $("#"+id).addClass('opened');
+                            $("#"+id).slideDown(300); 
+                        });
+                    } else if($("#"+id).hasClass('opened')) {
+                        $("#"+id).removeClass('opened');
+                        $("#"+id).slideUp(300);
+                    } else {
+                        $("#"+id).addClass('opened');
+                        $("#"+id).slideDown(300);
+                    }
+                });
+                /*
+                1) Send a GET request to the CoinMarketCap API
+                2) Fetch the result
+                3) Update the price displayed
+                */
+                $.ajax({
+                    url: "https://api.coinmarketcap.com/v1/ticker/",
+                    success: function (response) {  
+                        var app = '<li class="liFrom"><table><tr onclick="changeFrom(\'USD\', \'US Dollar\')"><td class="coin"><span class="coinName">US Dollar</span></td><td class="sb">USD</td></tr></table></li>';
+                        $("#from").append(app+'<li class="divider" id="#"></li>');
+                        var app = '<li class="liTo"><table><tr onclick="changeTo(\'USD\', \'US Dollar\')"><td class="coin"><span class="coinName">US Dollar</span></td><td class="sb">USD</td></tr></table></li>';
+                        $("#to").append(app+'<li class="divider" id="#"></li>');
+                        response.forEach(function (value, index, array) {
+                            var nm = value['name'];
+                            var sb = value['symbol'];
+                            var element = '<li class="liFrom"><table><tr onclick="changeFrom(\''+sb+'\', \''+nm+'\')"><td class="coin"><span class="coinName">'+nm+'</span></td><td class="sb">'+sb+'</td></tr></table></li>';
+                            $("#from").append(element);
+                            var element = '<li class="liTo"><table><tr onclick="changeTo(\''+sb+'\', \''+nm+'\')"><td class="coin"><span class="coinName">'+nm+'</span></td><td class="sb">'+sb+'</td></tr></table></li>';
+                            $("#to").append(element);
+                            if(index != array.length-1) {
+                                $("#from").append('<li class="divider" id="#"></li>');
+                                $("#to").append('<li class="divider" id="#"></li>');
+                            }
+                        });
+                    }
+                });
+            });
+            
+            function changeFrom (symbol, name) { //This function changes the symbol of the left currency and calls updateExchange().
+                $("#fromSymbol").html(symbol); //Change text
+                $("#fromList").removeClass('opened');
+                $("#fromList").slideUp(300); //Close slider
+                currency['From'] = name;
+                updateExchange(name, 'From');
+            }
+            
+            function changeTo (symbol, name) { //This function changes the symbol of the right currency and calls updateExchange().
+                $("#toSymbol").html(symbol); //Change text
+                $("#toList").removeClass('opened');
+                $("#toList").slideUp(300); //Close slider
+                currency['To'] = name;
+                updateExchange(name, 'To');
+            }
+            
+            function updateExchange (name, side) { //This function calculates the price conversion.
+                if(name == 'UPDATE_EXCHANGE') {
+                    if(side == 'From') {
+                        name = currency['From'];
+                    } else if(side == 'To') {
+                        name = currency['To'];
+                    }
+                }
+                currency[side] = name;
+                var fromUsd = null;
+                var toUsd = null;
+                /*
+                Again, this section of code sends a GET request.
+                */
+                $.ajax({
+                    url: "https://api.coinmarketcap.com/v1/ticker/",
+                    success: function (response) {
+                        response.forEach(function (value, index, array) {
+                            if(currency['From'] == 'US Dollar') {
+                                fromUsd = 1;
+                            } else {
+                                if(value['name'] == currency['From']) {
+                                    fromUsd = value['price_usd'];
+                                }
+                            }
+                            if(currency['To'] == 'US Dollar') {
+                                toUsd = 1;
+                            } else {
+                                if(value['name'] == currency['To']) {
+                                    toUsd = value['price_usd'];
+                                }
+                            }
+                        });
+                        var number = {'from': '', 'to': ''};
+                        number['from'] = $("#fromNumber").html(); //Gets the value of the left input
+                        number['to'] = $("#toNumber").html(); //Gets the value of the right input
+                        var rate = toUsd/fromUsd; //Calculates the rate between the two currencies
+                        if(side == 'From') {
+                            var result = number['to']*rate;
+                            if(decimalPlaces(result) > 8) result = result.toFixed(8); 
+                            $("#fromNumber").html(result);
+                        } else if(side == 'To') {
+                            var result = number['from']/rate;
+                            if(decimalPlaces(result) > 8) result = result.toFixed(8);
+                            $("#toNumber").html(result);
+                        }
+                    }
+                });
+            }
+            
+            function search (side) { //This function looks for a value in the left or the right slider.
+                var input, filter, table, tr, td, i;
+                input = document.getElementById("searchTable"+side); 
+                filter = input.value.toUpperCase(); //This is the value to look for. 
+                $(".li"+side).each(function () {
+                    if($(this)) {
+                        if($(this).html().toUpperCase().indexOf(filter) > -1) { //If it doesn't find a match in a row...
+                            $(this).css("display", ""); //Hide row
+                            $(this).next().css("display", ""); //Hide divider line
+                        } else { //Else if it finds a match in a row...
+                            $(this).css("display", "none"); //Display row
+                            $(this).next().css("display", "none"); //Display divider line
+                        }
+                    }
+                }); 
+            }
+            
+            function decimalPlaces(num) { //This function let me simply count how many decimal places exist in a number
+                var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+                if (!match) { return 0; }
+                return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
+            }
+        </script>
+</head>
+<body onload="myFunction()" style="margin:0;">
+
+<div id="loader"></div>
+<div style="display:none;" id="myDiv" class="animate">
+ 
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">FRCN</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Exchange Overview</a></li>
+                <li><a href="trading.html">Token Trading</a></li>
+                <li><a href="managetoken.html">Manage tokens</a></li>
+                <li class="active"><a href="crypto-converter.html">Crypto Converter<span class="sr-only">(current)</span></a></li>
+                <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+                <li style="margin-left: 550px";><a href="">Logout</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fuid" style="background-color:orange";>
+<br></br>
+<br></br>
+	<div class="title text-center">
+            <h1 style="text-decoration: underline";>Crypto Converter</h1>
+            <span class="border"></span>
+	</div>
+
+
+<div class="container1">
+<div class="row">
+<div class="col col-lg-5">
+</div>
+<div class="col">
+<div onkeypress="if(event.keyCode < 48 || event.keyCode > 57 || event.keyCode == 190){return false;}"  id="fromNumber" onkeydown="updateExchange('UPDATE_EXCHANGE', 'To')" class="input left" contenteditable="true" spellcheck="false">1</div>
+
+            <div class="input right select" data-next="from"style="margin-left:6.5rem";>
+                <div><span id="fromSymbol">BTC</span>&nbsp;<span class="arrow">&#x27A4;</span></div>
+            </div>
+			
+            <div class="list" id="fromList">
+                <div class="searchWrapper">
+                    <input type="text" id="searchTableFrom" class="searchTable" placeholder="Search" onkeyup="search('From')">
+                </div>
+                <ol id="from">
+                    <li class="divider" id="#"></li>
+                </ol>
+            </div>
+<data=  src="data:Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjI0cHgiIGhlaWdodD0iMjRweCIgdmlld0JveD0iMCAwIDUxMS42MjYgNTExLjYyNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTExLjYyNiA1MTEuNjI3OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxnPgoJPHBhdGggZD0iTTUwNi4yMDMsMjQyLjk2NmwtNzMuMDg3LTczLjA4OWMtMy42MjEtMy42MTctNy45MDItNS40MjQtMTIuODQ3LTUuNDI0Yy00Ljk0OSwwLTkuMjMzLDEuODA3LTEyLjg1NCw1LjQyNCAgIGMtMy42MTMsMy42MTYtNS40Miw3Ljg5OC01LjQyLDEyLjg0N3YzNi41NDdIMTA5LjYzNnYtMzYuNTQ3YzAtNC45NDktMS44MDktOS4yMzEtNS40MjYtMTIuODQ3ICAgYy0zLjYxOS0zLjYxNy03LjkwMi01LjQyNC0xMi44NS01LjQyNGMtNC45NDcsMC05LjIzLDEuODA3LTEyLjg0Nyw1LjQyNEw1LjQyNCwyNDIuOTY2QzEuODA5LDI0Ni41OCwwLDI1MC44NjUsMCwyNTUuODEzICAgYzAsNC45NDcsMS44MDksOS4yMzIsNS40MjQsMTIuODQ1bDczLjA4OSw3My4wOTFjMy42MTcsMy42MTMsNy44OTcsNS40MjQsMTIuODQ3LDUuNDI0YzQuOTUyLDAsOS4yMzQtMS44MTEsMTIuODUtNS40MjQgICBjMy42MTctMy42MTQsNS40MjYtNy44OTgsNS40MjYtMTIuODQ3di0zNi41NDloMjkyLjM1OXYzNi41NDljMCw0Ljk0OCwxLjgwNyw5LjIzMiw1LjQyLDEyLjg0NyAgIGMzLjYyMSwzLjYxMyw3LjkwNSw1LjQyNCwxMi44NTQsNS40MjRjNC45NDQsMCw5LjIyNi0xLjgxMSwxMi44NDctNS40MjRsNzMuMDg3LTczLjA5MWMzLjYxNy0zLjYxMyw1LjQyNC03Ljg5OCw1LjQyNC0xMi44NDUgICBDNTExLjYyNiwyNTAuODY1LDUwOS44MiwyNDYuNTgsNTA2LjIwMywyNDIuOTY2eiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=" />
+			<div><h3 style="text-align:center";>Is</h3></div>
+
+            <div onkeypress="if(event.keyCode < 48 || event.keyCode > 57){return false;}" id="toNumber" onkeydown="updateExchange('UPDATE_EXCHANGE', 'From')" class="input left" contenteditable="true" spellcheck="false">1</div>
+            <div class="input right select" data-next="to"style="margin-left:6.7rem";>
+                <div><span id="toSymbol">USD</span>&nbsp;<span class="arrow">&#x27A4;</span></div>
+            </div>
+            <div class="list" id="toList">
+                <div class="searchWrapper">
+                    <input type="text" id="searchTableTo" class="searchTable" placeholder="Search" onkeyup="search('To')">
+                </div>
+                <ol id="to">
+                    <li class="divider" id="#"></li>
+</ol>
+            </div>
+		</div>
+	</div>
+</div>
+<br></br>
+<br></br>
+<footer id="footer" class="bg-one">
+  <div class="top-footer">
+    <div class="container">
+      <div class="row2">
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>INFORMATION</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+            <li><a href="contact_us.html">Contact Us</a></li>
+            <li><a href="Whitepaper.html">Whitepaper</a></li>
+           
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+
+        
+        <!-- End of .col-sm-3 -->
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Quick Links</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+			<li><a href="trading.html">Token Trading</a></li>
+            <li><a href="managetoken.html">Manage Tokens</a></li>
+            <li><a href="Crypto-converter.html">Crypto Converter</a></li>
+            <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+		<!-- End of .col-sm-3 -->
+		<div class="col-sm-3 col-md-3 col-lg-3">
+          <h3></h3>
+          <ul>
+            <li><a href="logo.png"></a></li>
+            
+          </ul>
+        </div>
+        
+        <!-- End of .col-sm-3 -->
+
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Follow Us</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+              <li>
+                  <a href="http://www.facebook.com/firecoin.world">
+                      Facebook
+                  </a>
+              </li>
+              <li>
+                  <a href="https://twitter.com/Firecoin3">
+                      Twitter
+                  </a>
+              </li>
+              <li>
+                  <a href="https://instagram.com/firecoin3">
+                      Instagram
+                  </a>
+              </li>
+          </ul>
+        </div>
+	</div>
+</div>
+</div>
+        <!-- End of .col-sm-3 -->
+		<!-- end container -->
+  <div class="footer-bottom">
+    <h5>Copyright 2018. All rights reserved.</h5>
+    <h6>Design and Developed by <a href="">Firecoin</a></h6>
+  </div>
+</footer> <!-- end footer -->
+
+<script>
+var myVar;
+
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+</script>
+
+    <!-- end Footer Area
+    ========================================== -->
+	
+</body>
+<script type="text/javascript">
+
+    window.addEventListener('load', function () {
+        App.initManageToken();
+    });
+</script>
+<!-- 
+    Essential Scripts
+    =====================================-->
+    
+    <!-- Main jQuery -->
+    <script src="./plugins/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.7 -->
+    <script src="./plugins/bootstrap/dist/js/popper.min.js"></script>
+    <script src="./plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+   
+<script src="plugins/smooth-scroll/dist/js/smooth-scroll.min.js"></script>
+</html>

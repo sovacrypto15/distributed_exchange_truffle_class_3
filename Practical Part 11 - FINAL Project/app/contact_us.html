@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>FRCN - Firecoin</title>
+    <script src="./app.js"></script>
+    <link rel="stylesheet" href="./app/stylesheets/app.css">
+    <link type="text/css" rel="stylesheet" href="./app/stylesheets/main.css" />
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="web3.min.js"></script>
+   
+    
+  </head>
+  <body onload="myFunction()" style="margin:0;">
+
+<div id="loader"></div>
+<div style="display:none;" id="myDiv" class="animate">
+ 
+    <nav class="navbar navbar-default" style="height: auto;";>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">FRCN</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" style="margin: 0px -15px; float: left";>
+                <li><a href="index.html">Exchange Overview</a></li>
+                <li><a href="trading.html">Token Trading</a></li>
+                <li><a href="managetoken.html">Manage tokens</a></li>
+                <li><a href="crypto-converter.html">Crypto Converter</a></li>
+                <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+                <li style="margin-left: 550px";><a href="">Logout</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+</div>
+    <!--start contactform-->
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.css">
+
+    <script>
+        $(document).ready(function () {
+            var user, to, subject, text;
+            $("#send_email").click(function () {
+                // enter your email account that you want to recieve emails at.
+                to = "hello@sethbergman.com";
+                name = $("#name").val();
+                user = $("#user_email").val();
+                text = $("#textarea1").val();
+                // $("#message").text("Sending E-mail...Please wait");
+                $.get("http://localhost:8080/send", {
+                    to: to,
+                    name: name,
+                    user: user,
+                    text: text
+                }, function (data) {
+                    if (data == "sent") {
+                        console.log("Email sent");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!--Modal Trigger Script-->
+    <script>
+  $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal-trigger').leanModal();
+  });
+    </script>
+
+
+
+    <div id="form" class="row container center
+        z-depth-5"style="margin-top:50px";>
+        <div class="title center"style="color: white; font-size: 40px; text-decoration: underline";>Contact Us!</div>
+        <br></br>
+        <form id="name-field" class="col s12">
+            <div class="row">
+                <div class="input-field col s12 white-text">
+                    <input class="input-field-text" id="name" type="text">
+                    <label for="name" class="login-text">Name</label>
+                </div>
+            </div>
+        </form>
+
+        <form id="email-field" class="col s12">
+            <div class="row">
+                <div class="input-field col s12 white-text">
+                    <input class="input-field-text" id="user_email" type="email" class="validate">
+                    <label for="email" class="login-text">Email</label>
+                </div>
+            </div>
+        </form>
+
+        <form id="message-field" class="col s12">
+            <div class="row">
+                <div class="input-field col s12 white-text">
+                    <textarea id="textarea1" class="materialize-textarea" type="text-area"></textarea>
+                    <label for="textarea1" class="login-text">Message</label>
+                </div>
+            </div>
+        </form>
+        <a id="send_email" class="waves-effect waves-light btn-large black homepage-buttons button-text center modal-trigger" href="#modal1"> Send email </a>
+
+
+        <!-- Message Sent Modal Structure -->
+        <div id="modal1" class="modal modal-fixed-footer thank-you-modal">
+            <div class="modal-content">
+                <h4>Thank you!</h4>
+                <p>Your email has been sent. I'll get back to you shortly.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- end contact form-->
+      <br></br>
+      
+       <br></br>
+<footer id="footer" class="bg-one">
+  <div class="top-footer">
+    <div class="container">
+      <div class="row2">
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>INFORMATION</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+            <li><a href="contact_us.html" >Contact Us</a></li>
+            <li><a href="Whitepaper.html">Whitepaper</a></li>
+           
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+
+        
+        <!-- End of .col-sm-3 -->
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Quick Links</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+			<li><a href="trading.html">Token Trading</a></li>
+            <li><a href="managetoken.html">Manage Tokens</a></li>
+            <li><a href="Crypto-converter.html">Crypto Converter</a></li>
+            <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+		<!-- End of .col-sm-3 -->
+		<div class="col-sm-3 col-md-3 col-lg-3">
+          <h3></h3>
+          <ul>
+            <li><a href="logo.png"></a></li>
+            
+          </ul>
+        </div>
+        
+        <!-- End of .col-sm-3 -->
+
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Follow Us</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+              <li>
+                  <a href="http://www.facebook.com/firecoin.world">
+                      Facebook
+                  </a>
+              </li>
+              <li>
+                  <a href="https://twitter.com/Firecoin3">
+                      Twitter
+                  </a>
+              </li>
+              <li>
+                  <a href="https://instagram.com/firecoin3">
+                      Instagram
+                  </a>
+              </li>
+          </ul>
+        </div>
+	</div>
+</div>
+</div>
+        <!-- End of .col-sm-3 -->
+		<!-- end container -->
+  <div class="footer-bottom">
+    <h5>Copyright 2018. All rights reserved.</h5>
+    <h6>Design and Developed by <a href="">Firecoin</a></h6>
+  </div>
+</footer> <!-- end footer -->
+<script>
+var myVar;
+
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+</script>
+
+
+    <!-- end Footer Area
+    ========================================== -->
+	
+  </body>
+<script type="text/javascript">
+
+    window.addEventListener('load', function () {
+        App.initManageToken();
+    });
+</script>
+<!-- 
+    Essential Scripts
+    =====================================-->
+    
+    <!-- Main jQuery -->
+    <script src="./plugins/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.7 -->
+    <script src="./plugins/bootstrap/dist/js/popper.min.js"></script>
+    <script src="./plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+<script src="plugins/smooth-scroll/dist/js/smooth-scroll.min.js"></script>
+
+</html>
