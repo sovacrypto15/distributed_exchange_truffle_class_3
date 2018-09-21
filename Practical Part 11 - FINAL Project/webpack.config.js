@@ -19,7 +19,10 @@ module.exports = {
         new CopyWebpackPlugin([
             {from: './app/index.html', to: "index.html"},
             {from: './app/trading.html', to: "trading.html"},
-            {from: './app/managetoken.html', to: "managetoken.html"}
+            {from: './app/managetoken.html', to: "managetoken.html"},
+            {from: './app/crypto_converter.html', to: "crypto_converter.html"},
+            {from: './app/cryptodragons.html', to: "cryptodragons.html"},
+            {from: './app/contact_us.html', to: "contact_us.html"}
         ]),
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
