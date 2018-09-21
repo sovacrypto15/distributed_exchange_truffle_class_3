@@ -1,0 +1,340 @@
+<!-- style for currency converter
+==================================================== -->
+        <style type="text/css">
+            * {
+                box-sizing: border-box;
+            }
+            
+                        body {
+                margin: 0px;
+                background-color: organge;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                
+                
+            }
+            html {
+                font-size:12px;
+               }
+            .row {
+                background-color: #ff1414;
+                
+               display: inline-block;
+margin-top: 0em;
+margin-bottom: 0em;
+margin-right: auto;
+padding-top: 20px;
+padding-bottom: 20px;
+border:3px solid black;
+padding-left:-10px;
+padding-right:2rem;
+                
+                
+            }
+.row2 {
+              
+
+                
+                
+            }
+           
+            
+
+            .input {
+                border: 1px solid #cccccc;
+                box-shadow: inset 0 0 0.125em 0 rgba(0, 0, 0, .125);
+                display: inline-block;
+                padding: .6rem 1.4rem .6rem 1.4rem;
+                font-size: 1.5rem;
+                font-family: 'Raleway', Helvetica, sans-serif;
+                min-width: 10px;
+                background-color: #ffffff;
+                white-space: wrap;
+                overflow: hidden;
+                max-width: 20rem;
+            }
+            
+            .left {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                margin-right: 10rem;
+				margin-left: 2rem;
+				width: 20rem;
+    
+            }
+            
+            .right {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                
+				
+            }
+            
+            .wrapper {   
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                display: flex;
+                display: -webkit-flex;
+            }
+            
+            .image {
+                max-width: 1rem;
+                height: auto;
+                margin: 1rem;
+                vertical-align: middle;
+            }
+            
+            .select {
+                background-color: #f1f1f1;
+                cursor: pointer;
+                transition: .5s ease;
+            }
+            
+            .select:hover {
+                background-color: #e5e5e5;
+            }
+            
+            .arrow {
+                font-size: .8rem;
+                display: inline-block;
+                -moz-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                -webkit-transform: rotate(90deg);
+                transform: rotate(90deg);
+                vertical-align: middle;
+            }
+            
+            .list {
+                
+                background-color: white;
+                border-radius: 5px;
+                margin-top: 5px;
+                
+                display: none;
+                padding: 5px 10px 5px 10px;
+                max-height: 200px;
+                font-family: 'Quicksand', Helvetica, sans-serif;
+                border: 1px solid #cccccc;
+                box-shadow: inset 0 0 0.125em 0 rgba(0, 0, 0, .125);
+                overflow-x: hidden;
+                right: 0;
+                left: 0;
+            }
+            
+            ol {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                display: inline;
+            }
+            
+            .divider {
+                height: 1px !important;
+                background-color: #cccccc;
+            }
+            
+            table, tr, td {
+                max-width: 100%;
+            }
+            
+            table {
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+            
+            tr td:last-child {
+                width: 1%;
+                white-space: nowrap;
+            }
+            
+            .sb {
+                text-align: right;
+            }
+            
+            
+            .coin {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 80%;
+            }
+            
+            .list::-webkit-scrollbar-track {
+                background-color: #F5F5F5;
+            }
+            .list::-webkit-scrollbar {
+                width: 4px;
+                background-color: #F5F5F5;
+            }
+            .list::-webkit-scrollbar-thumb {
+                background-color: #cccccc;
+            }
+            
+            .searchTable {
+                margin: 8px 0px 8px 0px;
+                border-radius: 3px;
+                border: 1px solid #cccccc;
+                box-shadow: inset 0 0 0.125em 0 rgba(0, 0, 0, .125);
+                width: 100%;
+                font-size: 1.3rem;
+                font-family: 'Raleway', Helvetica, sans-serif;
+                padding: 8px;
+                background-image: url("https://image.ibb.co/i3bvwR/search.png");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: right;
+                background-origin: content-box;
+            }   
+            
+            .coinName {
+                cursor: pointer;
+                transition: .5s ease;
+            }
+            
+            .coinName:hover {
+                color: #4286f4;
+            }
+/*=================================================================
+  Footer section
+==================================================================*/
+.top-footer {
+  background-color: #222222;
+  border-top: 1px solid #404040;
+  padding: 100px 0 80px;
+}
+
+.top-footer h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.top-footer p {
+  font-size: 13px;
+  line-height: 30px;
+  color: #bdbdbd;
+  font-weight: 300;
+  padding-right: 20px;
+}
+
+.top-footer li a {
+  font-size: 13px;
+  line-height: 30px;
+  color: #bdbdbd;
+  font-weight: 300;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+  transition: color .3s;
+  font-family: "Playfair Display", serif;
+  display: block;
+}
+
+.top-footer li a:hover {
+  color: #31BB9E;
+}
+
+.footer-bottom {
+  text-align: center;
+  background-color: #1b1b1b;
+  border-top: 1px solid #2c2c2c;
+  padding: 30px 0;
+}
+
+.footer-bottom h5 {
+  font-size: 12px;
+  line-height: 1;
+  color: #888888;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 7px;
+  margin-bottom: 3px;
+}
+
+.footer-bottom h6 {
+  font-size: 11px;
+  line-height: 15px;
+  color: #888888;
+  font-weight: 400;
+  text-transform: capitalize;
+  letter-spacing: 2px;
+  margin-bottom: 0;
+}
+
+.footer-bottom p {
+  color: #656565;
+}
+
+.footer-bottom a {
+  color: #31BB9E;
+}
+
+.subscribe-form .form-control {
+  border-radius: 0;
+}
+
+.page-404 h1 {
+  font-size: 200px;
+}
+        <style>
+/* Center the loader */
+#loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+</style>
+
