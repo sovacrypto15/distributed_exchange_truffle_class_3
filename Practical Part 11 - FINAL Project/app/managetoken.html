@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FRCN - Fire Exchange</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="./app.js"></script>
+    <link rel="stylesheet" href="./app/stylesheets/app.css">
+    
+</head>
+<body onload="myFunction()" style="margin:0;">
+
+<div id="loader"></div>
+<div style="display:none;" id="myDiv" class="animate">
+ 
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">FRCN</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Exchange Overview</a></li>
+                <li><a href="trading.html"> Token Trading</a></li>
+                <li class="active"><a href="managetoken.html">Manage tokens <span class="sr-only">(current)</span></a></li>
+                <li><a href="crypto-converter.html">Crypto Converter</a></li>
+                <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+                <li style="margin-left: 550px";><a href="">Logout</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-8">
+
+            <h1 style="text-decoration: underline";>Manage Tokens</h1>
+            <h3 style="text-align: left";>You have <span class="black"><span id="balanceTokenInToken"></span> FRCN</span> in your account</h3>
+
+            <br>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default panel-primary">
+                        <div class="panel-heading">Send Tokens</div>
+                        <div class="panel-body">
+
+                            <form>
+                                <div class="form-group"style="text-align:left";>
+                                    <label for="inputAmountSendToken">Amount in Token</label>
+                                    <input type="number" name="inputAmountSendToken" class="form-control"
+                                           id="inputAmountSendToken" placeholder="e.g., 1000">
+                                </div>
+                                <div class="form-group"style="text-align:left";>
+                                    <label for="inputBeneficiarySendToken">To (address)</label>
+                                    <input type="text" class="form-control" id="inputBeneficiarySendToken"
+                                           name="inputBeneficiarySendToken" placeholder="e.g. 0x123ABde44...">
+                                </div>
+                                <button type="button" class="btn btn-default" onclick="App.sendToken();return false;">
+                                    Send Token
+                                </button>
+                            </form>
+
+                        </div>
+                        <div class="panel-footer"style="text-align: left";>Directly send a token from your address to another address.</div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-default panel-primary">
+                        <div class="panel-heading">Approve Token Allowance</div>
+                        <div class="panel-body">
+                            <form>
+                                <div class="form-group"style="text-align:left";>
+                                    <label for="inputAmountAllowanceToken">Amount in Token</label>
+                                    <input type="number" name="inputAmountAllowanceToken" class="form-control"
+                                           id="inputAmountAllowanceToken" placeholder="e.g., 1000">
+                                </div>
+                                <div class="form-group"style="text-align:left";>
+                                    <label for="inputBeneficiaryAllowanceToken">To (address)</label>
+                                    <input type="text" class="form-control" id="inputBeneficiaryAllowanceToken"
+                                           name="inputBeneficiaryAllowanceToken" placeholder="e.g. 0x123ABde44...">
+                                </div>
+                                <button type="button" class="btn btn-default"
+                                        onclick="App.allowanceToken();return false;">Allow Tokens to be used
+                                </button>
+                            </form>
+                        </div>
+                        <div class="panel-footer"style="text-align: left";>Approve the address <i>to be allowed</i> to send a token from your
+                            address to another address. This is important for the Exchange.
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <br>
+            <div class="panel panel-default">
+                <div class="panel-heading">Add Token to Exchange</div>
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group"style="text-align:left";>
+                            <label for="inputNameTokenAddExchange">Name of the Token</label>
+                            <input type="text" name="inputNameTokenAddExchange" class="form-control"
+                                   id="inputNameTokenAddExchange" placeholder="FRCN">
+                        </div>
+                        <div class="form-group"style="text-align:left";>
+                            <label for="inputAddressTokenAddExchange">Address of Token</label>
+                            <input type="text" class="form-control" id="inputAddressTokenAddExchange"
+                                   name="inputAddressTokenAddExchange" placeholder="e.g. 0x123ABde44...">
+                        </div>
+                        <button type="button" class="btn btn-default" onclick="App.addTokenToExchange();return false;">
+                            Add Token to Exchange
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-4" style="background-color: #eee; min-height: 100vh;">
+            <h3 style="text-decoration: underline";>Events from the Firecoin Contract</h3>
+            <div id="tokenEvents"></div>
+            <br></br>
+            <h3 style="text-decoration: underline";>Status:</h3>
+            <span id="status"></span>
+            <br></br>
+            <h3 style="text-decoration: underline";>Important Information</h3>
+            <span id="importantInformation"></span>
+        </div>
+        </div>
+</div>
+<br></br>
+<br></br>
+<footer id="footer" class="bg-one">
+  <div class="top-footer">
+    <div class="container">
+      <div class="row2">
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>INFORMATION</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+            <li><a href="contact_us.html">Contact Us</a></li>
+            <li><a href="Whitepaper.html">Whitepaper</a></li>
+           
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+
+        
+        <!-- End of .col-sm-3 -->
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Quick Links</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+			<li><a href="trading.html">Token Trading</a></li>
+            <li><a href="managetoken.html">Manage Tokens</a></li>
+            <li><a href="Crypto-converter.html">Crypto Converter</a></li>
+            <li><a href="cryptodragons.html">Crypto Dragons</a></li>
+            <li><a href="index.html">Home</a></li>
+          </ul>
+        </div>
+        <!-- End of .col-sm-3 -->
+		<!-- End of .col-sm-3 -->
+		<div class="col-sm-3 col-md-3 col-lg-3">
+          <h3></h3>
+          <ul>
+            <li><a href="logo.png"></a></li>
+            
+          </ul>
+        </div>
+        
+        <!-- End of .col-sm-3 -->
+
+
+        <div class="col-sm-3 col-md-3 col-lg-3">
+          <h3>Follow Us</h3>
+          <ul style="list-style-type: none; margin: 0; padding: 0";>
+              <li>
+                  <a href="http://www.facebook.com/firecoin.world">
+                      Facebook
+                  </a>
+              </li>
+              <li>
+                  <a href="https://twitter.com/Firecoin3">
+                      Twitter
+                  </a>
+              </li>
+              <li>
+                  <a href="https://instagram.com/firecoin3">
+                      Instagram
+                  </a>
+              </li>
+          </ul>
+        </div>
+	</div>
+</div>
+</div>
+        <!-- End of .col-sm-3 -->
+		<!-- end container -->
+  <div class="footer-bottom">
+    <h5>Copyright 2018. All rights reserved.</h5>
+    <h6>Design and Developed by <a href="">Firecoin</a></h6>
+  </div>
+</footer>
+<script>
+var myVar;
+
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+</script>
+ <!-- end footer -->
+</body>
+<script type="text/javascript">
+
+    window.addEventListener('load', function () {
+        App.initManageToken();
+    });
+</script>
+<!-- 
+    Essential Scripts
+    =====================================-->
+    
+    <!-- Main jQuery -->
+    <script src="./plugins/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.7 -->
+    <script src="./plugins/bootstrap/dist/js/popper.min.js"></script>
+    <script src="./plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+   
+<script src="plugins/smooth-scroll/dist/js/smooth-scroll.min.js"></script>
+</html>
